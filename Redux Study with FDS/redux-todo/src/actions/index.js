@@ -9,23 +9,12 @@ export const addTodo = text => ({
   text,
 });
 
-export const setVisibilityFilter = filter => ({
-  type: 'SET_VISIBILITY_FILTER',
-  filter,
-});
+// export const setVisibilityFilter = filter => ({
+//   type: 'SET_VISIBILITY_FILTER',
+//   filter,
+// });
 
 export const toggleTodo = id => ({
   type: 'TOGGLE_TODO',
   id,
 });
-
-export const getVisibleTodos = (todos, filter) => {
-  switch (filter) {
-    case 'SHOW_ALL':
-      return todos;
-    case 'SHOW_COMPLETED':
-      return todos.filter(t => t.completed);
-    case 'SHOW_ACTIVE':
-      return todos.filter(t => !t.completed);
-  }
-};
