@@ -7,28 +7,24 @@ import { fetchList } from '../ducks/list';
 
 class List extends Component {
   componentDidMount() {
-    this.getList();
+    // 리스트를 불러오는 함수를 prop으로 받아서 실행해준다.
+    const { getList } = this.props;
+    getList();
   }
 
-  getList = () => {
-    fetchList();
-  };
-
   render() {
-    const { data } = this.props;
-    console.log(data);
-    return <ListView data={data} />;
+    return <ListView />;
   }
 }
 
-const mapStateToProps = state => ({
-  data: state.list,
-});
 const mapDispatchToProps = dispatch => ({
-  getPost: fetchList(),
+  // prop으로 함수를 넘겨준다.
+  // API를 호출하는 함수를 dispatch의 인자로 넘겨줘야
+  // 해당 함수에서 dispatch를 인자로 받아서 사용할 수 있다.
+  getList: () => dispatch(fetchList()),
 });
 
 export default connect(
-  mapStateToProps,
+  null,
   mapDispatchToProps
 )(List);
