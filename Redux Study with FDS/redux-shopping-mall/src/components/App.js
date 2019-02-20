@@ -4,6 +4,7 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
 import NoMatchView from './NoMatchView';
 import List from '../containers/List';
+import Item from '../containers/Item';
 
 import store from '../store';
 
@@ -14,6 +15,7 @@ class App extends Component {
         <BrowserRouter>
           <Switch>
             <Route exact path="/" component={List} />
+            <Route path="/list/:id" component={Item} />
             <Route component={NoMatchView} />
           </Switch>
         </BrowserRouter>

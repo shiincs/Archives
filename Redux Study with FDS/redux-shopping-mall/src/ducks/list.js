@@ -6,10 +6,9 @@ const GET_LIST = 'redux-shopping-mall/list/GET_LIST';
 
 // 상품 목록 관련 리듀서
 export default function list(state = [], action) {
-  console.log(action);
   switch (action.type) {
     case GET_LIST:
-      return [...state, ...action.response.data];
+      return action.response.data;
     default:
       return state;
   }

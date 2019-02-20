@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 
 const ListView = ({ list }) => {
   return (
@@ -7,7 +8,9 @@ const ListView = ({ list }) => {
       <div>상품 목록 페이지</div>
       <ul>
         {list.map(item => (
-          <li key={item.id}>{item.title}</li>
+          <li key={item.id}>
+            <Link to={`list/${item.id}`}>{item.title}</Link>
+          </li>
         ))}
       </ul>
     </>
