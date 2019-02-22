@@ -1,11 +1,19 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 
-const HeaderView = ({ isLogined }) => {
+const HeaderView = ({ isLogined, onLogout, history }) => {
   return (
     <>
       {isLogined ? (
-        <Link to="/">로그아웃</Link>
+        <button
+          onClick={e => {
+            e.preventDefault();
+            onLogout();
+            history.push('/');
+          }}
+        >
+          로그아웃
+        </button>
       ) : (
         <>
           <Link to="/register">회원가입</Link>
@@ -16,4 +24,4 @@ const HeaderView = ({ isLogined }) => {
   );
 };
 
-export default HeaderView;
+export default withRouter(HeaderView);

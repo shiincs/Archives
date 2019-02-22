@@ -2,13 +2,26 @@ import api from '../api';
 
 // 액션 타입 변수
 const LOGIN_USER = 'redux-shopping-mall/user/LOGIN_USER';
+const LOGOUT_USER = 'redux-shopping-mall/user/LOGOUT_USER';
 const REGISTER_USER = 'redux-shopping-mall/user/REGISTER_USER';
 
 // 리듀서
 export default function user(state = {}, action) {
   switch (action.type) {
     case LOGIN_USER:
-      return { ...state, id: action.id, username: action.username };
+      return {
+        ...state,
+        id: action.id,
+        username: action.username,
+        isLogined: true,
+      };
+    case LOGOUT_USER:
+      return {
+        ...state,
+        id: null,
+        username: null,
+        isLogined: false,
+      };
     default:
       return state;
   }
@@ -21,7 +34,11 @@ const loginUser = (id, username) => ({
   username,
 });
 
-// API 호출
+const logoutUser = () => ({
+  type: LOGOUT_USER,
+});
+
+// 비동기 통신을 위한 API 호출부
 const loginUserAPI = async (username, password) => {
   return await api.post('/users/login', {
     username,
@@ -33,7 +50,7 @@ const refreshUserAPI = async () => {
   return await api.get('/me');
 };
 
-// 컴포넌트 통신
+// 액션 디스패치 실행부
 export const fetchLoginUser = (username, password) => dispatch => {
   loginUserAPI(username, password).then(res => {
     const token = res.data.token;
@@ -42,9 +59,14 @@ export const fetchLoginUser = (username, password) => dispatch => {
   });
 };
 
-const fetchRefreshUser = () => dispatch => {
+export const fetchRefreshUser = () => dispatch => {
   refreshUserAPI().then(res => {
     const { id, username } = res.data;
     dispatch(loginUser(id, username));
   });
+};
+
+export const fetchLogoutUser = () => dispatch => {
+  localStorage.removeItem('token');
+  dispatch(logoutUser());
 };

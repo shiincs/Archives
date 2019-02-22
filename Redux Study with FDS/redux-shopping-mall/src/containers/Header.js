@@ -1,22 +1,33 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+
 import HeaderView from '../components/HeaderView';
 
-export default class Header extends Component {
-  state = {
-    isLogined: false,
-  };
+import { fetchRefreshUser, fetchLogoutUser } from '../ducks/user';
 
+class Header extends Component {
   componentDidMount() {
-    console.log(localStorage.getItem('token'));
     if (localStorage.getItem('token')) {
-      this.setState({
-        isLogined: true,
-      });
+      this.props.refreshUser();
     }
   }
+
   render() {
-    const { isLogined } = this.state;
-    console.log(isLogined);
-    return <HeaderView isLogined={isLogined} />;
+    const { isLogined, logoutUser } = this.props;
+    return <HeaderView isLogined={isLogined} onLogout={() => logoutUser()} />;
   }
 }
+
+const mapStateToProps = state => ({
+  isLogined: state.user.isLogined,
+});
+
+const mapDispatchToProps = dispatch => ({
+  refreshUser: () => dispatch(fetchRefreshUser()),
+  logoutUser: () => dispatch(fetchLogoutUser()),
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Header);
