@@ -10,7 +10,6 @@ class Login extends Component {
   state = {
     username: '',
     password: '',
-    success: false,
   };
 
   handleInputChange = (e, name) => {
@@ -21,8 +20,8 @@ class Login extends Component {
 
   handleLogin = () => {
     const { username, password } = this.state;
-    const { fetchLoginUser } = this.props;
-    fetchLoginUser(username, password);
+    const { loginUser } = this.props;
+    loginUser(username, password);
   };
 
   render() {
@@ -50,7 +49,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  fetchLoginUser: (username, password) =>
+  loginUser: (username, password) =>
     dispatch(fetchLoginUser(username, password)),
 });
 
