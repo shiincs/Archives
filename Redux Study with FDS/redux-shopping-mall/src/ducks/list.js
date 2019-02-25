@@ -22,28 +22,30 @@ const getList = response => ({
 });
 
 // 비동기 API 호출부
-const getListAPI = async () => {
-  return await api.get('/products');
+const getListAPI = async params => {
+  return await api.get('/products', {
+    params,
+  });
 };
 
 // 비동기 네트워크 통신부
 // 비동기로 API를 호출해서 나온 프로미스 결과값을 액션 크리에이터에 넣고, 디스패치한다.
-export const fetchList = () => async dispatch => {
+export const fetchList = params => async dispatch => {
   try {
-    // loading indicator start
+    // 로딩 인디케이터 시작
     dispatch(startLoading());
 
     // API 호출부 함수 내부에서 async / await을 정의해줬음에도 불구하고,
     // 해당 함수를 호출할 때 await으로 호출해주지 않으면
     // 비동기로 실행되면서 finally 구문의 finishLoading()이 먼저 디스패치 된다.
     // --> 왜...?
-    await getListAPI().then(response => {
+    await getListAPI(params).then(response => {
       dispatch(getList(response));
     });
   } catch (e) {
     console.error(e);
   } finally {
-    // loading indicator finish
+    // 로딩 인디케이터 종료
     dispatch(finishLoading());
   }
 };

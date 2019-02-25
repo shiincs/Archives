@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Provider } from 'react-redux';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 
 import Layout from '../components/Layout';
 import NoMatchView from './NoMatchView';
@@ -18,10 +18,11 @@ class App extends Component {
         <BrowserRouter>
           <Layout>
             <Switch>
-              <Route exact path="/" component={List} />
+              <Route exact path="/list" component={List} />
               <Route path="/list/:id" component={Item} />
               <Route path="/register" component={Register} />
               <Route path="/login" component={Login} />
+              <Redirect from="/" to="/list" />
               <Route component={NoMatchView} />
             </Switch>
           </Layout>
