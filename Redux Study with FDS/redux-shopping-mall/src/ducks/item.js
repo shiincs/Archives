@@ -1,4 +1,5 @@
 import api from '../api';
+import { startLoading, finishLoading } from './loading';
 
 const GET_ITEM = 'redux-shopping-mall/item/GET_ITEM';
 
@@ -24,8 +25,16 @@ const getItemAPI = async id => {
 };
 
 // 비동기 네트워크 통신부
-export const fetchItem = id => dispatch => {
-  getItemAPI(id).then(response => {
-    dispatch(getItem(response));
-  });
+export const fetchItem = id => async dispatch => {
+  try {
+    dispatch(startLoading());
+
+    await getItemAPI(id).then(response => {
+      dispatch(getItem(response));
+    });
+  } catch (e) {
+    console.error(e);
+  } finally {
+    dispatch(finishLoading());
+  }
 };

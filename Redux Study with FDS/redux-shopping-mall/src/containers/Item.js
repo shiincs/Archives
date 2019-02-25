@@ -12,11 +12,17 @@ class Item extends Component {
   }
 
   render() {
-    return <ItemView />;
+    const { item, isLoading } = this.props;
+    if (isLoading) {
+      return <p>Now Loading...</p>;
+    }
+    return <ItemView item={item} />;
   }
 }
 
 const mapStateToProps = (state, ownProps) => ({
+  item: state.item,
+  isLoading: state.loading,
   itemId: ownProps.match.params.id,
 });
 

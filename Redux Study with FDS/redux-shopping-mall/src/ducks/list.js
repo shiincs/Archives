@@ -1,5 +1,6 @@
 // import modules
 import api from '../api';
+import { startLoading, finishLoading } from './loading';
 
 // action name variables for ducks pattern
 const GET_LIST = 'redux-shopping-mall/list/GET_LIST';
@@ -27,8 +28,22 @@ const getListAPI = async () => {
 
 // 비동기 네트워크 통신부
 // 비동기로 API를 호출해서 나온 프로미스 결과값을 액션 크리에이터에 넣고, 디스패치한다.
-export const fetchList = () => dispatch => {
-  getListAPI().then(response => {
-    dispatch(getList(response));
-  });
+export const fetchList = () => async dispatch => {
+  try {
+    // loading indicator start
+    dispatch(startLoading());
+
+    // API 호출부 함수 내부에서 async / await을 정의해줬음에도 불구하고,
+    // 해당 함수를 호출할 때 await으로 호출해주지 않으면
+    // 비동기로 실행되면서 finally 구문의 finishLoading()이 먼저 디스패치 된다.
+    // --> 왜...?
+    await getListAPI().then(response => {
+      dispatch(getList(response));
+    });
+  } catch (e) {
+    console.error(e);
+  } finally {
+    // loading indicator finish
+    dispatch(finishLoading());
+  }
 };
