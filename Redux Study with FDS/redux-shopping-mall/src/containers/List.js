@@ -35,6 +35,8 @@ class List extends Component {
     if (isLoading) {
       return <p>Now Loading...</p>;
     }
+    // 이렇게 CC에서 prop을 전부 받아서 필요한 prop만 PC에 직접 내려주는게 나은가...
+    // 아니면 PC에서 필요한 prop도 전부 connect로 연결해서 스토어에서 직접 받아주는게 나은가...?
     return <ListView list={list} />;
   }
 }
