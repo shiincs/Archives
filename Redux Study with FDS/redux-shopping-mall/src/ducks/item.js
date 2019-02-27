@@ -19,17 +19,12 @@ const getItem = response => ({
   response,
 });
 
-// 비동기 API 호출부
-const getItemAPI = async id => {
-  return await api.get(`/products/${id}`);
-};
-
-// 비동기 네트워크 통신부
+// 비동기 네트워크 통신부 (thunk creator)
 export const fetchItem = id => async dispatch => {
   try {
     dispatch(startLoading());
 
-    await getItemAPI(id).then(response => {
+    await api.get(`/products/${id}`).then(response => {
       dispatch(getItem(response));
     });
   } catch (e) {

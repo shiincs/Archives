@@ -53,57 +53,48 @@ const registerUser = () => ({
   type: REGISTER_USER,
 });
 
-// 비동기 통신을 위한 API 호출부
-const loginUserAPI = async (username, password) => {
+// 액션 디스패치 실행부 (thunk creator)
+export const fetchLoginUser = (username, password) => async dispatch => {
   try {
-    return await api.post('/users/login', {
-      username,
-      password,
+    await api
+      .post('/users/login', {
+        username,
+        password,
+      })
+      .then(res => {
+        const token = res.data.token;
+        localStorage.setItem('token', token);
+        dispatch(fetchRefreshUser());
+      });
+  } catch (e) {
+    console.error(e);
+  }
+};
+
+export const fetchRefreshUser = () => async dispatch => {
+  try {
+    await api.get('/me').then(res => {
+      const { id, username } = res.data;
+      dispatch(loginUser(id, username));
     });
   } catch (e) {
     console.error(e);
   }
 };
 
-const refreshUserAPI = async () => {
+export const fetchRegisterUser = (username, password) => async dispatch => {
   try {
-    return await api.get('/me');
+    await api
+      .post('/users/register', {
+        username,
+        password,
+      })
+      .then(res => {
+        dispatch(registerUser());
+      });
   } catch (e) {
     console.error(e);
   }
-};
-
-const registerUserAPI = async (username, password) => {
-  try {
-    return await api.post('/users/register', {
-      username,
-      password,
-    });
-  } catch (e) {
-    console.error(e);
-  }
-};
-
-// 액션 디스패치 실행부
-export const fetchLoginUser = (username, password) => dispatch => {
-  loginUserAPI(username, password).then(res => {
-    const token = res.data.token;
-    localStorage.setItem('token', token);
-    dispatch(fetchRefreshUser());
-  });
-};
-
-export const fetchRefreshUser = () => dispatch => {
-  refreshUserAPI().then(res => {
-    const { id, username } = res.data;
-    dispatch(loginUser(id, username));
-  });
-};
-
-export const fetchRegisterUser = (username, password) => dispatch => {
-  registerUserAPI(username, password).then(res => {
-    dispatch(registerUser());
-  });
 };
 
 export const fetchLogoutUser = () => dispatch => {

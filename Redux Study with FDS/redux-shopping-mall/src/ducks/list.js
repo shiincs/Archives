@@ -21,15 +21,15 @@ const getList = response => ({
   response,
 });
 
-// 비동기 API 호출부
+// 비동기 API 호출부 (사실 여기서 async/await 해줘봤자 큰 의미가 없는 듯 하다.)
 const getListAPI = async params => {
   return await api.get('/products', {
     params,
   });
 };
 
-// 비동기 네트워크 통신부
-// 비동기로 API를 호출해서 나온 프로미스 결과값을 액션 크리에이터에 넣고, 디스패치한다.
+// 비동기 네트워크 통신부 (썽크 크리에이터)
+// 비동기로 API를 호출해서 나온 프로미스 결과값을 썽크 크리에이터에 넣고, 디스패치한다.
 export const fetchList = params => async dispatch => {
   try {
     // 로딩 인디케이터 시작
