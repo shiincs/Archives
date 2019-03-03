@@ -24,7 +24,7 @@
 | CODE | Todo List Example (Before Refactoring)                       | shiincs                                           |
 | CODE | Todo List Example (After Refactored)                         | shiincs                                           |
 
-
+---
 
 ### egghead-redux-advance 번역, 정리본([course link](https://egghead.io/courses/building-react-applications-with-idiomatic-redux))
 
