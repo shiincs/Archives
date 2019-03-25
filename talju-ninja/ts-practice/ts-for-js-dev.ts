@@ -2,6 +2,9 @@
     3.0 타입스크립트 기초 문법
 */
 
+/* 
+    3.1 기본 타입
+*/
 const isTypeScriptAwesome: boolean = true;
 const doesJavaScriptHasTypes: boolean = false;
 
@@ -57,4 +60,74 @@ function alwaysThrow(): never {
   throw new Error(`I'm a wicked function!`);
 }
 
-alwaysThrow();
+// alwaysThrow();
+
+/* 
+    3.2 배열과 튜플
+*/
+
+const pibonacci: number[] = [0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55];
+const myFavoriteBeers: string[] = [
+  'Imperial Stout',
+  'India Pale Ale',
+  'Weizenbock',
+];
+
+console.log(pibonacci);
+console.log(myFavoriteBeers);
+
+// 배열 타입은 아래처럼 쓸 수도 있다.
+// const pibonacci: Array<number> = [0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55];
+// const myFavoriteBeers: Array<string> = [
+//   'Imperial Stout',
+//   'India Pale Ale',
+//   'Weizenbock',
+// ];
+
+// 튜플
+const nameAndAge: [string, number] = ['Changseon', 29];
+// 아래처럼 하면 에러(타입에 명시된 개수만큼의 원소를 가질 수 있다.)
+// const nameAndAge: [string, number] = ['Changseon', 29, 'cs', 30];
+console.log(nameAndAge);
+
+// 다만 아래처럼 Array 프로토타입의 메소드를 통해
+// 배열의 원소를 조작하는 것은 에러가 발생하지 않는다.
+nameAndAge.push('developer');
+console.log(nameAndAge);
+
+/* 
+    3.3 객체
+*/
+
+const user: { name: string; age: number } = { name: 'changseon', age: 29 };
+console.log(user);
+
+// 타입 속성명 뒤에 ? 를 붙여 해당 속성이 존재하지 않을 수도 있음을 나타낼 수 있다.
+const userWithUnknownAge: { name: string; age?: number } = { name: 'cs' };
+console.log(userWithUnknownAge);
+
+// 타입 속성명 앞에 readonly 키워드를 붙여 해당 속성의 재할당을 막을 수 있다.
+const userWithReadonly: { readonly name: string; age: number } = {
+  name: 'cs',
+  age: 29,
+};
+// userWithReadonly.name = 'changseon!'; // 에러(재할당 불가)
+
+/* 
+    3.4 타입 별칭(type alias)
+*/
+
+type UUID = string;
+type age = number;
+type AnotherUUID = UUID;
+// type Animals = Animal[];
+type User = { name: string; age: number };
+
+function getUser(uuid: UUID): UUID {
+  // 함수 본문
+  console.log(uuid);
+  return uuid;
+}
+
+// getUser(7); // type error
+getUser('cs');
