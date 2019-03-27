@@ -99,3 +99,249 @@
 - paths와 baseUrl
   - 상대경로 방식이 아닌 baseUrl로 꼭지점과 paths 안의 키/밸류로 모듈을 가져가는 방식
 - rootDirs: 배열 안에서 상대 경로를 찾는 방식
+
+## var, let, const
+
+- var
+  - ES5
+  - 변수의 유효 범위: 함수 스코프
+  - 호이스팅 O
+  - 재선언 가능
+- let, const
+  - ES6
+  - 변수의 유효 범위: 블록 스코프
+  - 호이스팅 X
+  - 재선언 불가
+- let과 const의 타입 추론
+
+  ```ts
+  let a: string = '에이';
+  let b = '비이';
+
+  const c: string = '씨이';
+  const d = '디이';
+
+  /* 
+    a는 명시적으로 지정된 타입인 string
+    b는 타입 추론에 의한 타입인 string
+    c는 명시적으로 지정된 타입인 string
+    d는 타입 추론에 의한  타입인 리터럴타입
+  */
+  ```
+
+## Type Assertions, Type alias
+
+1. Type Assertions
+
+- `타입이 이것이다` 라고 컴파일러에게 알려주는 것을 의미
+- 실제로 타입을 바꾸는 형변환과는 달리 타입을 바꾸지는 않는다.
+- 문법 작성방법
+  - `변수 as 강제할타입`
+  - `<강제할타입>변수`
+
+```ts
+let someValue: any = 'this is a string';
+
+let strLength: number = (<string>someValue).length;
+let strLength: number = (someValue as string).length;
+
+/* 
+  1. 주로 넓은 타입에서 좁은 타입으로 강제하는 경우가 많다.
+  2. jsx에서는 주로 as를 쓴다.
+*/
+```
+
+2. Type Alias
+
+- 인터페이스랑 비슷하다.
+- Primitive, Union Type, Tuple 에 대해서 사용한다.
+- 직접 작성해야 하는 타입을 다른 이름으로 지정할 수 있다.
+- 만들어진 타입의 reference를 만드는 것이지 실제 타입을 만드는 것이 아니다.
+- `interface extends type alias` 가능
+- `class implements type alias` 가능
+- `class extends type alias 불가 (interface도 불가)`
+
+## Interface
+
+### Indexable type (optional 하게 사용된다)
+
+1. object처럼 index를 string으로 사용하는 경우
+
+```ts
+interface Person {
+  name: string;
+  // [index: string]: string;
+}
+```
+
+2. array처럼 index를 number로 사용하는 경우
+
+```ts
+interface Person2 {
+  [index: number]: Person;
+}
+
+const p2: Person2 = {};
+p2[0] = { name: 'changseon' };
+p2[100] = 'hello'; // type error (Person type needed)
+```
+
+3. 특수한 경우
+
+```ts
+interface StringDictionaryNo {
+  [index: string]: string;
+  name: number; // error (인덱서블 타입이 string 값을 가지기 때문에 number를 필수로 끌어오면 에러)
+}
+
+interface test {
+  [index: number]: number;
+  1: string; // error (반대의 경우도 에러가 발생한다.)
+}
+```
+
+### function in Interface
+
+```ts
+interface Person {
+  name: string;
+  hello(): string;
+}
+
+const person: Person = {
+  neme: 'changseon',
+  hello(): string {
+    return 'hello';
+  },
+};
+```
+
+### class implements Interface
+
+```ts
+interface IPerson {
+  name: string;
+  hello(): void;
+}
+
+class Person implements IPerson {
+  name: string = null;
+
+  constructor(name: string) {
+    this.name = name;
+  }
+
+  hello(): void {
+    console.log(`안녕하세요 ${this.name} 입니다.`);
+  }
+
+  public hi(): void {
+    console.log(`하이 난 ${this.name} 임.`);
+  }
+}
+
+// 인스턴스 person의 타입은 클래스 Person일 수도 있고,
+const person: Person = new Person('changseon');
+// 인터페이스 자체를 타입으로 할 수도 있다. (어떤 속성과 메서드를 받을 것이냐에 따라 정하면 된다.)
+const person: IPerson = new Person('changseon');
+
+person.hello();
+person.hi();
+```
+
+### interface extends interface
+
+```ts
+interface Person {
+  name: string;
+  age?: number;
+}
+
+interface Korean extends Person {
+  city: string;
+}
+
+const k: Korean = {
+  name: 'changseon',
+  city: 'seoul',
+};
+```
+
+## class
+
+### 클래스 만들기
+
+1. 생성자 함수가 없으면, 디폴트 생성자가 불린다.
+2. 클래스의 프로퍼티 혹은 멤버 변수가 정의되어 있지만, 값을 대입하지 않으면 undefine 이다.
+
+   - 오브젝트에 프로퍼티가 아예 존재하지 않는다.
+
+3. 접근제어자(Access Modifier)는 public이 디폴트이다.
+
+### 클래스와 프로퍼티
+
+1. 클래스의 프로퍼티를 선언과 동시에 값을 할당하는 방법도 있다.
+2. 생성자가 불리기 전에 이미 프로퍼티의 값이 저장되어 있음을 알 수 있다.
+
+### 클래스와 프로퍼티의 접근 제어자
+
+1. private으로 설정된 프로퍼티는 dot(.)으로 접근할 수 없다.
+2. 클래스 내부에서는 private 프로퍼티를 사용할 수 있다.
+3. private이 붙은 변수나 함수는 `_`를 이름앞에 붙이는데, 이는 문법이 아니라 널리 쓰이는 코딩 컨벤션이다.
+4. 부모에서 private으로 설정된 프로퍼티는 상속을 받은 자식에서도 접근할 수 없다.
+5. 부모에서 protected로 설정된 프로퍼티는 상속을 받은 자식에서 접근이 가능하다.
+6. 상속을 받은 자식 클래스에서 부모 클래스에 this를 통해 접근하려면, 생성자에서 `super()`를 통해 초기화 해줘야 한다.
+
+### 클래스와 메서드
+
+1. 클래스 내부에 작성된 메서드는 public이 디폴트
+2. arrow function으로 작성 가능
+3. private을 붙이면 클래스 외부에서 접근 불가
+
+### 클래스와 상속
+
+1. 상속은 `extends` 키워드를 이용한다.
+2. 자식 클래스에서 디폴트 생성자는 부모의 생성자와 입력 형태가 같다.
+3. 생성자를 정의하고 this를 사용하려면 super를 통해 부모의 생성자를 호출해줘야 한다.
+4. super를 호출할때는 부모 생성자의 입력 타입이 같아야 한다.
+5. super를 호출하는 것은 클래스 외부에서 호출하는 것과 같다.
+6. protected 함수를 호출해서 그 안의 private을 출력하는 것에 주의한다.
+
+### 클래스와 private constructor
+
+1. 생성자 함수 앞에 접근제어자인 private을 붙일 수 있다.
+2. 외부에서 인스턴스 생성이 불가능하다.
+   - 싱글톤 패턴으로 인스턴스는 내부에서 생성하고, 인스턴스를 생성하는 메서드를 public static으로 열어서 외부에서 생성한다.
+
+### 클래스와 싱글톤 패턴
+
+1. private 생성자를 이용해서 내부에서만 인스턴스 생성이 가능하도록 함.
+2. public static 메서드를 통해 private static 인스턴스 레퍼런스를 획득한다.
+3. Lazy Loading(Lazy Initialization): 최초 실행시가 아니라 사용시에 할당을 한다.
+
+```ts
+class Preference {
+  public static Instance: Person = null;
+
+  public static getInstance(): Person {
+    if (Person.Instance === null) {
+      Person.Instance = new Person();
+    }
+    return Person.Instance;
+  }
+
+  private constructor() {}
+
+  hello() {}
+}
+
+const p = Person.getInstance();
+p.hello();
+```
+
+### 클래스와 readonly
+
+1. private readonly로 선언된 경우, 생성자에서는 할당이 가능하다.
+2. private readonly로 선언된 경우, 생성자 이외에서는 할당이 불가능하다.
+3. public readonly로 선언된 경우, 클래스 외부에서는 다른값을 할당할 수 없다.
+4. 마치 getter만 있는 경우와 같다.
