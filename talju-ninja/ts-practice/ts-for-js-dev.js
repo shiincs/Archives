@@ -92,3 +92,19 @@ function getUser(uuid) {
 }
 // getUser(7); // type error
 getUser('cs');
+/*
+    3.5 함수
+*/
+// 함수 값의 타입 표기
+// const yetAnotherSum: (a: number, b: number) => number = sum;
+var onePlusOne = function () { return 2; };
+var arrowSum = function (a, b) { return a + b; };
+var cb;
+// 실제 함수 매개변수에는 this가 나타나지 않음
+var onClick = function (event, cb) {
+    // this는 HTMLElement 타입
+    console.log(this.tagName);
+    cb();
+};
+var el = document.querySelector('.btn');
+console.log(el);

@@ -131,3 +131,34 @@ function getUser(uuid: UUID): UUID {
 
 // getUser(7); // type error
 getUser('cs');
+
+/* 
+    3.5 함수
+*/
+
+// 함수 값의 타입 표기
+// const yetAnotherSum: (a: number, b: number) => number = sum;
+const onePlusOne: () => number = () => 2;
+const arrowSum: (a: number, b: number) => number = (a, b) => a + b;
+
+// This 타입
+interface HTMLElement {
+  tagName: string;
+}
+
+interface Handler {
+  (this: HTMLElement, event: Event, callback: () => void): void;
+}
+
+let cb: any;
+
+// 실제 함수 매개변수에는 this가 나타나지 않음
+const onClick: Handler = function(event, cb) {
+  // this는 HTMLElement 타입
+  console.log(this.tagName);
+  cb();
+};
+
+const el: HTMLElement | null = document.querySelector('.btn');
+
+console.log(el);
