@@ -267,7 +267,7 @@ const k: Korean = {
 };
 ```
 
-## class
+## Class
 
 ### 클래스 만들기
 
@@ -345,3 +345,101 @@ p.hello();
 2. private readonly로 선언된 경우, 생성자 이외에서는 할당이 불가능하다.
 3. public readonly로 선언된 경우, 클래스 외부에서는 다른값을 할당할 수 없다.
 4. 마치 getter만 있는 경우와 같다.
+
+## Generic
+
+### basic generic
+
+1. Generic 타입을 쓰지 않으면, T로 추론
+2. Generic 타입을 쓰며, T를 확인
+
+```ts
+function hello<T>(message: T): T {
+  return message
+}
+
+console.log(hello<string>('hello));
+let age = hello(29);
+hello<number>('29');  // type error
+```
+
+### Generic Class
+
+1. 명시적으로 제네릭 타입을 설정하면 오류가 난다.
+
+```ts
+class Person<T> {
+  private _name: T;
+  private _age: number;
+
+  constructor(name: T) {
+    this._name = name;
+  }
+}
+
+new Person('cs'); // ok
+new Person<string>(29); // type error
+```
+
+### Generic with extends
+
+1. T가 string 또는 number를 상속받기 때문에 boolean은 안된다.
+
+```ts
+class Person<T extends string | number> {
+  private _name: T;
+  private _age: T;
+
+  constructor(name: T) {
+    this._name = name;
+  }
+}
+
+new Person('cs'); // ok
+new Person(29); // ok
+new Person(true); // type error
+```
+
+### Generic with Multiple types
+
+```ts
+class Person<T, K> {
+  private _name: T;
+  private _age: K;
+
+  constructor(name: T, age: K) {
+    this._name = name;
+    this._age = age;
+  }
+}
+
+new Person('cs', 29); // ok
+```
+
+### type lookup system
+
+```ts
+interface Person {
+  name: string;
+  age: number;
+}
+
+function getProperty<T, K extends keyof T>(obj: T, key: K): T[K] {
+  return obj[key];
+}
+
+function setProterty<T, K extends keyof T>(obj: T, key: K, value: T[K]): void {
+  obj[key] = value;
+}
+
+const person: Person = {
+  name: 'cs',
+  age: 29,
+};
+
+getProperty(person, 'name'); // ok
+getProperty(person, 'name1'); // error (해당 키를 찾을 수 없음)
+
+setProperty(person, 'name', 'changseon'); // ok
+setProperty(person, 'name1', 'changseon'); // error (해당 키를 찾을 수 없음)
+```
